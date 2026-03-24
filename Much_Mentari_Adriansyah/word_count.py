@@ -27,6 +27,12 @@ if text:
 
     st.divider()
 
+    # Visualisasi 
+    st.subheader("📊 Visualisasi Frekuensi Kata")
+    st.bar_chart(word_count)
+
+    st.divider()
+    
     # Tampilkan hasil per kata
     for word, count in word_count.items():
         st.write(f"🔹 **{word}** : {count}")
