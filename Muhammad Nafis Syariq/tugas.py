@@ -1,56 +1,52 @@
 import streamlit as st
-from collections import Counter
 
-st.set_page_config(page_title="Visualisasi Set & Word Count", layout="wide")
+st.set_page_config(page_title="Tugas Struktur Data", layout="centered")
 
-menu = st.sidebar.selectbox("Pilih Fitur", ["Operasi Himpunan", "Word Count"])
+st.title("Aplikasi Struktur Data")
 
-# OPERASI HIMPUNAN
-if menu == "Operasi Himpunan":
-    st.title("Operasi Himpunan")
+menu = st.sidebar.selectbox("Pilih Menu", ["Operasi Set", "Word Count"])
 
-    st.write("Masukkan elemen himpunan (pisahkan dengan koma)")
-    set_a_input = st.text_input("Himpunan A", " ")
-    set_b_input = st.text_input("Himpunan B", " ")
+if menu == "Operasi Set":
+    st.header("🔢 Visualisasi Operasi Set")
 
-    # Konversi
-    set_a = set(map(str.strip, set_a_input.split(",")))
-    set_b = set(map(str.strip, set_b_input.split(",")))
+    input_A = st.text_input("Masukkan elemen Set A (pisahkan dengan koma)")
+    input_B = st.text_input("Masukkan elemen Set B (pisahkan dengan koma)")
 
-    st.subheader("Hasil Operasi")
+    if input_A and input_B:
+        set_A = set([x.strip() for x in input_A.split(",")])
+        set_B = set([x.strip() for x in input_B.split(",")])
 
-    union = set_a.union(set_b)
-    intersection = set_a.intersection(set_b)
-    difference_ab = set_a.difference(set_b)
-    difference_ba = set_b.difference(set_a)
-    symmetric_diff = set_a.symmetric_difference(set_b)
+        st.write("Set A:", set_A)
+        st.write("Set B:", set_B)
 
-    col1, col2 = st.columns(2)
+        st.subheader("Hasil Operasi")
 
-    with col1:
-        st.write("Union (A ∪ B):", union)
-        st.write("Intersection (A ∩ B):", intersection)
+        st.success(f"Union: {set_A | set_B}")
+        st.info(f"Intersection: {set_A & set_B}")
+        st.warning(f"Difference (A - B): {set_A - set_B}")
+        st.warning(f"Difference (B - A): {set_B - set_A}")
+        st.error(f"Symmetric Difference: {set_A ^ set_B}")
 
-    with col2:
-        st.write("Difference (A - B):", difference_ab)
-        st.write("Difference (B - A):", difference_ba)
-        st.write("Symmetric Difference:", symmetric_diff)
 
-# WORD COUNT
 elif menu == "Word Count":
-    st.title("Word Count Komentar")
+    st.header("📝 Word Count Komentar")
 
-    text_input = st.text_area("Masukkan komentar sosial media:", 
-                              " ")
+    text = st.text_area("Masukkan komentar:")
 
-    # Preprocessing (data cleaning & normalisasi data)
-    words = text_input.lower().split()
-    words = [word.strip(".,!?()-_=+/") for word in words]
+    if text:
+        words = text.lower().split()
 
-    word_count = Counter(words)
+        word_count = {}
 
-    st.subheader("Hasil Word Count")
-    st.write(dict(word_count))
+        for word in words:
+            word = word.strip(".,!?")  # hapus tanda baca
+            if word in word_count:
+                word_count[word] += 1
+            else:
+                word_count[word] = 1
 
-# FOOTER
-st.sidebar.info("created by: Nafis")
+        st.subheader("Hasil Word Count")
+        st.write(word_count)
+
+        st.subheader("Grafik")
+        st.bar_chart(word_count)
